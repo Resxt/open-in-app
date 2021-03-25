@@ -9,7 +9,6 @@ git clone https://github.com/Killerjet101/open-in-app.git
 ```
 
 ## Supported Apps
-- Spotify
 
 ## To-Do
 - [ ] Make stuff work
