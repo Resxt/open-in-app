@@ -1,4 +1,4 @@
-# remind-me
+# open-in-app
 A Powercord plugin that allows you to open links to their appropriate apps!
 
 ## Installation
