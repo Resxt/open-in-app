@@ -12,3 +12,6 @@ git clone https://github.com/Killerjet101/open-in-app.git
 - Spotify
 - Steam
 - Twitch
+
+## To-Do
+- [ ] Make stuff work
