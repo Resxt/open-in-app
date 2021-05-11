@@ -10,6 +10,7 @@ git clone https://github.com/Killerjet101/open-in-app.git
 
 ## Supported Apps
 - [x] Spotify
-- [x] Steam
 - [ ] Tidal
+- [x] Steam
+- [ ] Epic Games
 - [ ] Twitch
