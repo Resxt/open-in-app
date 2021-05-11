@@ -12,3 +12,4 @@ git clone https://github.com/Killerjet101/open-in-app.git
 - [x] Spotify
 - [x] Steam
 - [ ] Tidal
+- [ ] Twitch
