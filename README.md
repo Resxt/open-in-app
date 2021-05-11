@@ -11,4 +11,5 @@ git clone https://github.com/Killerjet101/open-in-app.git
 ## Supported Apps
 
 ## To-Do
-- [ ] Make stuff work
+- [x] Make stuff work
+- [ ] Add more apps
