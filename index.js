@@ -8,23 +8,74 @@ module.exports = class OpenInApp extends Plugin {
 
     // Inject app support for types of links
     inject('open-in-steam', MessageContent, 'type', this.openInSteam);
-
+    inject('open-in-spotify', MessageContent, 'type', this.openInSpotify);
     MessageContent.type.displayName = "MessageContent"
   }
 
+  //Open In Steam
   openInSteam(args, res) {
     const children = res.props.children.find(c => Array.isArray(c));
 
-    children.forEach(child => {
-      if (!child.props?.href?.toLowerCase().includes('steamcommunity.com')) return;
+    if (children) {
+      //store.steampowered.com
+      for (var i = 0; i < children.length; i++) {
+        if (!children[i].props?.href?.toLowerCase().includes('store.steampowered.com')) continue
 
-      child.props.href = `steam://openurl/${child.props.title}`
-    })
+        const url = children[i].props.href.split('/');
+
+        if (!url[2] || !url[3]) continue;
+        if (!['explore', 'wishlist', 'points', 'news', 'stats', 'about', 'app', 'sub'].includes(url[3].toLowerCase())) continue;
+
+        children[i].props.href = `steam://openurl/https://${url.slice(2).join('/')}`;
+      }
+      //steamcommunity.com
+      for (var i = 0; i < children.length; i++) {
+        if (!children[i].props?.href?.toLowerCase().includes('steamcommunity.com')) continue
+
+        const url = children[i].props.href.split('/');
+
+        if (!url[2] || !url[3]) continue;
+        if (!['discussions', 'workshop', 'market', 'id', 'chat', 'app'].includes(url[3].toLowerCase())) continue;
+
+        children[i].props.href = `steam://openurl/https://${url.slice(2).join('/')}`;
+      }
+      //help.steampowered.com
+      for (var i = 0; i < children.length; i++) {
+        if (!children[i].props?.href?.toLowerCase().includes('help.steampowered.com')) continue
+
+        const url = children[i].props.href.split('/');
+
+        if (!url[2] || !url[3]) continue;
+
+        children[i].props.href = `steam://openurl/https://${url.slice(2).join('/')}`;
+      }
+    }
+    return res;
+  }
+
+  //Open In Spotify
+  openInSpotify(args, res) {
+    const children = res.props.children.find(c => Array.isArray(c));
+
+    if (children) {
+      //open.spotify.com
+      for (var i = 0; i < children.length; i++) {
+        if (!children[i].props?.href?.toLowerCase().includes('open.spotify.com')) continue;
+
+        const url = children[i].props.href.split('/');
+
+        if (!url[3] || !url[4]) continue;
+        if (!['embed', 'search', 'local', 'playlist', 'user', 'starred', 'artist', 'album', 'track', 'episode'].includes(url[3].toLowerCase())) continue;
+
+        children[i].props.href = `spotify:${url[3]}:${url[4]}`;
+      }
+    }
 
     return res;
   }
 
   pluginWillUnload() {
-    uninject('open-in-steam')
+    uninject('open-in-steam');
+    uninject('open-in-spotify');
   }
 }
