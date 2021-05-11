@@ -13,4 +13,5 @@ git clone https://github.com/Killerjet101/open-in-app.git
 - [ ] Tidal
 - [x] Steam
 - [ ] Epic Games
+- [ ] Origin
 - [ ] Twitch
