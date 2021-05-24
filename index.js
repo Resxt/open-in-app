@@ -9,6 +9,7 @@ module.exports = class OpenInApp extends Plugin {
     // Inject app support for types of links
     inject('open-in-steam', MessageContent, 'type', this.openInSteam);
     inject('open-in-spotify', MessageContent, 'type', this.openInSpotify);
+    inject('open-in-tidal', MessageContent, 'type', this.openInTIDAL);
     MessageContent.type.displayName = "MessageContent"
   }
 
@@ -74,8 +75,32 @@ module.exports = class OpenInApp extends Plugin {
     return res;
   }
 
+    //Open In TIDAL
+    openInTIDAL(args, res) {
+      const children = res.props.children.find(c => Array.isArray(c));
+  
+      if (children) {
+        //open.spotify.com
+        for (var i = 0; i < children.length; i++) {
+          if (!children[i].props?.href?.toLowerCase().includes('tidal.com')) {
+            continue;
+          }
+  
+          const url = children[i].props.href.split('/');
+  
+          if (!url[3] || !url[4] || !url[5]) continue;
+          if (!['track', 'video', 'artist', 'album', 'playlist', 'mix', 'radio'].includes(url[4].toLowerCase())) continue;
+  
+          children[i].props.href = `tidal://${url[4]}/${url[5]}`;
+        }
+      }
+  
+      return res;
+    }
+
   pluginWillUnload() {
     uninject('open-in-steam');
     uninject('open-in-spotify');
+    uninject('open-in-tidal');
   }
 }
