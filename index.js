@@ -13,12 +13,11 @@ module.exports = class OpenInApp extends Plugin {
     const children = res.props.children.find(c => Array.isArray(c));
    
     children.forEach(child => {
-        const LCM = child.props?.href?.toLowerCase();
       if (child.props?.href?.toLowerCase().includes('open.spotify.com')) {
         child.props.href = `spotify:${child.props.title}`
-      } else if (LCM.includes('store.steampowered.com')||LCM.includes('steamcommunity.com')||LCM.includes('help.steampowered.com')) {
+      } else if (child.props?.href?.toLowerCase().includes('store.steampowered.com') || child.props?.href?.toLowerCase().includes('steamcommunity.com') || child.props?.href?.toLowerCase().includes('help.steampowered.com')) {
         child.props.href = `steam://openurl/${child.props.title}`
-      } else if (LCM.includes('tidal.com')||LCM.includes('listen.tidal.com')) {
+      } else if (child.props?.href?.toLowerCase().includes('tidal.com') || child.props?.href?.toLowerCase().includes('listen.tidal.com')) {
         child.props.href = `tidal://${child.props.title}`
       }
 
