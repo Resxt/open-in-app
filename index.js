@@ -2,26 +2,41 @@ const { Plugin } = require('powercord/entities')
 const { getModule } = require('powercord/webpack');
 const { inject, uninject } = require('powercord/injector');
 
+const steamHostnames = [
+  'store.steampowered.com',
+  'steamcommunity.com',
+  'help.steampowered.com',
+];
+const spotifyHostnames = [
+  'open.spotify.com'
+];
+const tidalHostnames = [
+  'tidal.com',
+  'listen.tidal.com'
+]
+
 module.exports = class OpenInApp extends Plugin {
   startPlugin() {
-    const MessageContent = getModule(m => m.type && m.type.displayName == 'MessageContent', false);
-    inject('open-in-app', MessageContent, 'type', this.openInApp);
-    MessageContent.type.displayName = "MessageContent"
+    const Anchor = getModule(m => m.default?.displayName == 'Anchor', false);
+    inject('open-in-app', Anchor, 'default', this.openInApp);
+    Anchor.default.displayName = "Anchor";
   }
 
-  openInApp(args, res) {
-    const children = res.props.children.find(c => Array.isArray(c));
-   
-    children.forEach(child => {
-      if (child.props?.href?.toLowerCase().includes('open.spotify.com')) {
-        child.props.href = `spotify:${child.props.title}`
-      } else if (child.props?.href?.toLowerCase().includes('store.steampowered.com') || child.props?.href?.toLowerCase().includes('steamcommunity.com') || child.props?.href?.toLowerCase().includes('help.steampowered.com')) {
-        child.props.href = `steam://openurl/${child.props.title}`
-      } else if (child.props?.href?.toLowerCase().includes('tidal.com') || child.props?.href?.toLowerCase().includes('listen.tidal.com')) {
-        child.props.href = `tidal://${child.props.title}`
-      }
+  openInApp(_, res) {
+    if (!res.props.href) {
+      return res;
+    }
 
-    })
+    const hostname = (res.props.href?.hostname || new URL(res.props.href).hostname).toLowerCase();
+
+    if (spotifyHostnames.includes(hostname)) {
+      res.props.href = `spotify:${res.props.href}`;
+    } else if (steamHostnames.includes(hostname)) {
+      res.props.href = `steam://openurl/${res.props.href}`;
+    } else if (tidalHostnames.includes(hostname.toLowerCase())) {
+      res.props.href = `tidal://${res.props.href}`;
+    }
+
     return res;
   }
 
