@@ -15,3 +15,8 @@ git clone https://github.com/Killerjet101/open-in-app.git
 - [ ] Epic Games
 - [ ] Origin
 - [ ] Twitch
+
+## Configuration
+By default all the listed apps will open in the desktop application but if you want to always open certain links in the browser you can easily do that.  
+For this go to your Discord settings, scroll down to the Powercord category, click on `OpenInApp` and toggle off any app that you don't want to open in the desktop app.  
+Having it on will open corresponding links in the desktop app and having it off will open the corresponding links like before.

@@ -1,6 +1,8 @@
 const { Plugin } = require('powercord/entities')
-const { getModule } = require('powercord/webpack');
+const { React, getModule } = require('powercord/webpack');
 const { inject, uninject } = require('powercord/injector');
+
+const Settings = require('./components/Settings');
 
 const steamHostnames = [
   'store.steampowered.com',
@@ -16,9 +18,16 @@ const tidalHostnames = [
 ]
 
 module.exports = class OpenInApp extends Plugin {
+
   startPlugin() {
+    powercord.api.settings.registerSettings('open-in-app', {
+      category: this.entityID,
+      label: 'Open In App',
+      render: Settings
+    });
+
     const Anchor = getModule(m => m.default?.displayName == 'Anchor', false);
-    inject('open-in-app', Anchor, 'default', this.openInApp);
+    inject('open-in-app', Anchor, 'default', this.openInApp.bind(this));
     Anchor.default.displayName = "Anchor";
   }
 
@@ -29,12 +38,19 @@ module.exports = class OpenInApp extends Plugin {
 
     const hostname = (res.props.href?.hostname || new URL(res.props.href).hostname).toLowerCase();
 
-    if (spotifyHostnames.includes(hostname)) {
-      res.props.href = `spotify:${res.props.href}`;
-    } else if (steamHostnames.includes(hostname)) {
-      res.props.href = `steam://openurl/${res.props.href}`;
+    if (steamHostnames.includes(hostname)) {
+      if (this.settings.get('open-in-app-steam', true)) {
+        res.props.href = `steam://openurl/${res.props.href}`;
+      }
+    }
+    else if (spotifyHostnames.includes(hostname)) {
+      if (this.settings.get('open-in-app-spotify', true)) {
+        res.props.href = `spotify:${res.props.href}`;
+      }
     } else if (tidalHostnames.includes(hostname.toLowerCase())) {
-      res.props.href = `tidal://${res.props.href}`;
+      if (this.settings.get('open-in-app-tidal', true)) {
+        res.props.href = `tidal://${res.props.href}`;
+      }
     }
 
     return res;
